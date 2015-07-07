@@ -14,7 +14,7 @@
    +----------------------------------------------------------------------+
 */
 
-#include "hphp/runtime/base/base-includes.h"
+#include "hphp/runtime/ext/extension.h"
 #include "hphp/runtime/vm/native-data.h"
 #include "hphp/runtime/vm/runtime.h"
 #include "hphp/runtime/base/array-init.h"
@@ -117,14 +117,14 @@ void HHVM_METHOD(GearmanClient, __construct) {
 	data->m_impl.reset(new GearmanClientData::Impl);
 }
 
-bool HHVM_METHOD(GearmanClient, addServer, String& host, int64_t port) {
+bool HHVM_METHOD(GearmanClient, addServer, const String& host, int64_t port) {
 	auto data = Native::data<GearmanClientData>(this_);
 	const char* myHost = host.empty() ? nullptr : host.c_str();
 	gearman_return_t ret = gearman_client_add_server(&data->m_impl->client, myHost, port);
 	return ret == GEARMAN_SUCCESS;
 }
 
-bool HHVM_METHOD(GearmanClient, addServers, String& servers) {
+bool HHVM_METHOD(GearmanClient, addServers, const String& servers) {
 	auto data = Native::data<GearmanClientData>(this_);
 	const char* myServers = servers.empty() ? nullptr : servers.c_str();
 	gearman_return_t ret = gearman_client_add_servers(&data->m_impl->client, myServers);
@@ -207,7 +207,7 @@ String HHVM_METHOD(GearmanClient, doHighBackground, const String& function_name,
 	return String(handle);
 }
 
-bool HHVM_METHOD(GearmanClient, ping, String& workload) {
+bool HHVM_METHOD(GearmanClient, ping, const String& workload) {
 	auto data = Native::data<GearmanClientData>(this_);
 	const char* myWorkload = workload.empty() ? nullptr : workload.c_str();
 	size_t workload_size = workload.length();
@@ -251,14 +251,14 @@ void HHVM_METHOD(GearmanWorker, __construct) {
 	data->m_impl.reset(new GearmanWorkerData::Impl);
 }
 
-bool HHVM_METHOD(GearmanWorker, addServer, String& host, int64_t port) {
+bool HHVM_METHOD(GearmanWorker, addServer, const String& host, int64_t port) {
 	auto data = Native::data<GearmanWorkerData>(this_);
 	const char* myHost = host.empty() ? nullptr : host.c_str();
 	gearman_return_t ret = gearman_worker_add_server(&data->m_impl->worker, myHost, port);
 	return ret == GEARMAN_SUCCESS;
 }
 
-bool HHVM_METHOD(GearmanWorker, addServers, String& servers) {
+bool HHVM_METHOD(GearmanWorker, addServers, const String& servers) {
 	auto data = Native::data<GearmanWorkerData>(this_);
 	const char* myServers = servers.empty() ? nullptr : servers.c_str();
 	gearman_return_t ret = gearman_worker_add_servers(&data->m_impl->worker, myServers);
